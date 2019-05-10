@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" href="../css/base.css">
+
+</head>
+<body>
+  <div class="wrap">
+    <!-- 游戏 -->
+    <div class="game-page">
+      <div class="v-list-wrap" style="background-image: linear-gradient(rgba(123,104,238,0.8),rgba(123,104,238,0.8));color:#FFFF33">如果这里没有您想要观看的电影，请在首页留言中心求片！本软件将会在第一时间为您添加！</div>
+      <!-- 视频列表 -->
+    <div class="v-list-wrap" id="liveList">
+      <ul class="clearfix" id="div_list">
+
+      </ul>
+    </div>
+    <!-- 视频列表 end-->
+
+    </div>
+    <!-- 游戏 end-->
+  </div>
+</body>
+<script type="text/x-dot-template" id="template">
+{{~ it.msg : value : index }}
+    <li onclick="openWin('{{= value. url }}')">
+      <div class="video-mask-box">
+        <img src="{{= value. img }}" alt="" class="game-pic">
+      </div>
+      <div class="til">{{= value. title }}</div>
+
+    </li>
+{{~}}
+</script>
+<script type="text/javascript" src="../script/api.js" ></script>
+<script type="text/javascript" src="../script/doT.js"></script>
+<script type="text/javascript">
+
+  apiready = function(){
+    api.showProgress({
+        title: '加载中...',
+        modal: false
+    });
+    var div_list = $api.byId('div_list');
+    var template = $api.byId('template');
+    api.ajax({
+        url: 'http://47.96.125.28/yunduan/login/login/vlist.html',
+        method: 'get'
+    },function(ret, err){
+        if (ret) {
+          //alert( JSON.stringify( ret ) );
+          var pagefn = doT.template(template.text);
+          div_list.innerHTML = pagefn(ret);
+          api.hideProgress();
+        } else {
+          api.hideProgress();
+            //alert( JSON.stringify( err ) );
+        }
+    });
+
+  }
+
+  function getList(){
+
+
+
+
+  }
+
+
+  function openWin(name){
+        var delay = 0;
+        if(api.systemType != 'ios'){
+            delay = 300;
+        }
+        api.openWin({
+            name: 'vplay_win',
+            url: 'vplay_win.html',
+            bounces:false,
+            delay: delay,
+            slidBackEnabled:true,
+            vScrollBarEnabled:false,
+            pageParam:{video:name}
+        });
+    }
+</script>
+</html>
